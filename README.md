@@ -68,6 +68,11 @@ This application creates the backend of an e-comerce website by using Express.js
 
 ## Visuals
 
+<div>
+  <video src="https://github.com/ianahart/e-commerce-backend/assets/29121238/90dfff32-8198-4dd4-afe1-4b5098935062" width="650" controls type="video/mp4" />
+</div>
+
+
 ## Tests
 
 N/A
