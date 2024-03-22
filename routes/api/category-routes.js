@@ -14,13 +14,23 @@ router.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error', error });
   }
-  // find all categories
-  // be sure to include its associated ProductS
 });
 
-router.get('/:id', (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
+// get category by it's id
+router.get('/:id', async (req, res) => {
+  try {
+    const category = await Category.findByPk(req.params.id, {
+      include: [{ model: Product }],
+    });
+
+    if (!category) {
+      return res.status(404).json({ message: 'Category Not Found' });
+    }
+
+    res.status(200).json({ message: 'success', data: category });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error', error });
+  }
 });
 
 router.post('/', (req, res) => {
