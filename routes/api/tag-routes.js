@@ -78,8 +78,25 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
+// delete a tag by its id value
+router.delete('/:id', async (req, res) => {
+  try {
+    const tag = await Tag.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (tag === 0) {
+      return res
+        .status(404)
+        .json({ message: 'Tag not found', error: `tag with the id ${req.params.id} was not found` });
+    }
+
+    res.status(200).json({ message: 'success', data: tag });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error', error });
+  }
 });
 
 module.exports = router;
