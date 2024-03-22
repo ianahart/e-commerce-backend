@@ -33,12 +33,49 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', (req, res) => {
-  // create a new category
+// create a new category
+router.post('/', async (req, res) => {
+  try {
+    if (!Object.keys(req.body).includes('categoryName')) {
+      return res.status(400).json({ message: 'Bad Request', error: "Missing 'categoryName' in request body" });
+    }
+    const newCategory = await Category.create({
+      category_name: req.body.categoryName,
+    });
+
+    res.status(201).json({ message: 'Category created', data: newCategory });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error', error });
+  }
 });
 
-router.put('/:id', (req, res) => {
-  // update a category by its `id` value
+// update a category by it's id
+router.put('/:id', async (req, res) => {
+  try {
+    if (!Object.keys(req.body).includes('categoryName')) {
+      return res.status(400).json({ message: 'Bad Request', error: "Missing 'categoryName' in request body" });
+    }
+    const category = await Category.update(
+      {
+        category_name: req.body.categoryName,
+      },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
+
+    if (category === 0) {
+      return res
+        .status(404)
+        .json({ message: 'Bad Request', error: `category with the id ${req.params.id} was not found` });
+    }
+
+    res.status(200).json({ message: 'Category updated', data: category });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error', error });
+  }
 });
 
 router.delete('/:id', (req, res) => {
