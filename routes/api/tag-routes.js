@@ -14,11 +14,25 @@ router.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error', error });
   }
-  // find all tags
-  // be sure to include its associated Product data
 });
 
-router.get('/:id', (req, res) => {
+// get tag by id
+router.get('/:id', async (req, res) => {
+  try {
+    const product = await Tag.findByPk(req.params.id, {
+      include: [{ model: Product }],
+    });
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: 'Tag not found', error: `tag with the id ${req.params.id} was not found` });
+    }
+
+    res.status(200).json({ message: 'success', data: product });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error', error });
+  }
   // find a single tag by its `id`
   // be sure to include its associated Product data
 });
