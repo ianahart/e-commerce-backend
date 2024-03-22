@@ -33,12 +33,22 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error', error });
   }
-  // find a single tag by its `id`
-  // be sure to include its associated Product data
 });
 
-router.post('/', (req, res) => {
-  // create a new tag
+// create a new tag
+router.post('/', async (req, res) => {
+  try {
+    if (!Object.keys(req.body).includes('tagName')) {
+      return res.status(400).json({ message: 'Bad Request', error: "Missing 'tagName' in request body" });
+    }
+    const newTag = await Tag.create({
+      tag_name: req.body.tagName,
+    });
+
+    res.status(201).json({ message: 'Tag created', data: newTag });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error', error });
+  }
 });
 
 router.put('/:id', (req, res) => {
